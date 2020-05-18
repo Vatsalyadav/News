@@ -6,6 +6,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.vatsalyadav.apps.news.repository.NewsRepository;
+import com.vatsalyadav.apps.news.repository.localStorageNews.NewsDatabaseHelper;
 
 import javax.inject.Singleton;
 
@@ -37,4 +38,11 @@ public class AppModule {
     static NewsRepository provideNewsRepository() {
         return new NewsRepository();
     }
+
+    @Singleton
+    @Provides
+    static NewsDatabaseHelper provideNewsDatabaseHelper(Application application) {
+        return new NewsDatabaseHelper(application);
+    }
+
 }
