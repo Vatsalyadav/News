@@ -6,6 +6,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.vatsalyadav.apps.news.model.Article;
 import com.vatsalyadav.apps.news.model.News;
@@ -67,11 +71,30 @@ public class NewsViewModel extends ViewModel {
     public LiveData<Boolean> saveNewsItem(int position) {
         boolean isSuccessfullySaved = repository.saveNewsItem(articleList.getValue().get(position));
         saveNewsSuccess.postValue(isSuccessfullySaved);
+        if (isSuccessfullySaved) {
+            saveWebViewCache(articleList.getValue().get(position).getUrl());
+        }
         return saveNewsSuccess;
     }
 
-    public void deleteNewsArticle(Article article) {
+    public boolean deleteNewsArticle(Article article) {
         int result = repository.deleteNewsArticle(article);
+        return result != -1;
+    }
+
+    private void saveWebViewCache(String url) {
+        if (isNetworkConnected()) {
+            WebView webView = new WebView(application.getApplicationContext());
+            webView.getSettings().setLoadsImagesAutomatically(true);
+            webView.getSettings().setDomStorageEnabled(true);
+            webView.getSettings().setAppCachePath(application.getCacheDir().getAbsolutePath());
+            webView.getSettings().setAllowFileAccess(true);
+            webView.getSettings().setAppCacheEnabled(true);
+            webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+            webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+            webView.setWebViewClient(new WebViewClient());
+            webView.loadUrl(url);
+        }
     }
 
     public boolean isNetworkConnected() {

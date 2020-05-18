@@ -1,5 +1,6 @@
 package com.vatsalyadav.apps.news.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -40,6 +41,7 @@ public class NewsActivity extends DaggerAppCompatActivity implements NewsListAda
     private RecyclerView recyclerView;
     private List<Article> articles = new ArrayList<>();
     private NewsListAdapter adapter;
+    private NewsDetailsActivity newsDetailsActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class NewsActivity extends DaggerAppCompatActivity implements NewsListAda
         setContentView(R.layout.activity_news);
         progressBar = findViewById(R.id.progress_bar);
         viewModel = new ViewModelProvider(this, providerFactory).get(NewsViewModel.class);
+        newsDetailsActivity = new NewsDetailsActivity();
         getNewsList();
         setupRecyclerView();
     }
@@ -92,7 +95,8 @@ public class NewsActivity extends DaggerAppCompatActivity implements NewsListAda
 
     @Override
     public void onNewsClick(int position) {
-        Toast.makeText(this, "NEWS CLICK: " + position, Toast.LENGTH_LONG).show();
+        Intent newsDetailsIntent = newsDetailsActivity.launchNewsDetails(this, articles.get(position).getSource().getName(), articles.get(position).getUrl());
+        startActivity(newsDetailsIntent);
     }
 
     @Override
@@ -112,15 +116,18 @@ public class NewsActivity extends DaggerAppCompatActivity implements NewsListAda
             articles.get(position).setArticleSaved(true);
             adapter.notifyItemChanged(position);
         } else {
-            viewModel.deleteNewsArticle(articles.get(position));
-            if (viewModel.isNetworkConnected()) {
-                articles.get(position).setArticleSaved(false);
-                adapter.notifyItemChanged(position);
+            if (viewModel.deleteNewsArticle(articles.get(position))) {
+                if (viewModel.isNetworkConnected()) {
+                    articles.get(position).setArticleSaved(false);
+                    adapter.notifyItemChanged(position);
+                } else {
+                    articles.remove(position);
+                    adapter.notifyItemRemoved(position);
+                }
+                Toast.makeText(getBaseContext(), "News Successfully deleted from local storage", Toast.LENGTH_SHORT).show();
             } else {
-                articles.remove(position);
-                adapter.notifyItemRemoved(position);
+                Toast.makeText(getBaseContext(), "Failed to Delete News", Toast.LENGTH_SHORT).show();
             }
-
         }
     }
 }
