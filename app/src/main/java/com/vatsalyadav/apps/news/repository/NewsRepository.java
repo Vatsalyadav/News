@@ -1,9 +1,11 @@
 package com.vatsalyadav.apps.news.repository;
 
-import android.util.Log;
+import android.database.Cursor;
 
 import com.google.gson.Gson;
+import com.vatsalyadav.apps.news.model.Article;
 import com.vatsalyadav.apps.news.model.News;
+import com.vatsalyadav.apps.news.repository.localStorageNews.NewsDatabaseHelper;
 import com.vatsalyadav.apps.news.util.Constants;
 
 import java.io.BufferedInputStream;
@@ -12,6 +14,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -21,13 +25,18 @@ import io.reactivex.schedulers.Schedulers;
 
 public class NewsRepository {
     private News newsList;
+    private NewsDatabaseHelper newsDatabaseHelper;
 
-    public Flowable<News> getNewsList() {
+    public void setNewsDatabaseHelper(NewsDatabaseHelper newsDatabaseHelper) {
+        this.newsDatabaseHelper = newsDatabaseHelper;
+    }
+
+    public Flowable<News> getNewsList(final boolean networkConnection) {
         newsList = new News();
         return Flowable.create(new FlowableOnSubscribe<News>() {
             @Override
             public void subscribe(FlowableEmitter<News> emitter) throws Exception {
-                emitter.onNext(getNewsFromUrl());
+                emitter.onNext(networkConnection ? getNewsFromUrl() : getNewsFromLocalStorage());
                 emitter.onComplete();
             }
         }, BackpressureStrategy.BUFFER)
@@ -49,15 +58,37 @@ public class NewsRepository {
                 result.append(line);
             }
             responseString = result.toString();
-            Log.e("Repo success", "httpCall: " + responseString);
             newsList = new Gson().fromJson(responseString, News.class);
         } catch (Exception e) {
             newsList.setStatus(Constants.STATUS_FAILED);
-            Log.e("Repo fail", "httpCall error: " + e.getStackTrace());
         } finally {
             urlConnection.disconnect();
         }
         return newsList;
+    }
+
+    private News getNewsFromLocalStorage() {
+        List<Article> articleList = new ArrayList<>();
+        try {
+            Cursor cursor = newsDatabaseHelper.getData();
+            while (cursor.moveToNext()) {
+                articleList.add(new Gson().fromJson(cursor.getString(3), Article.class));
+            }
+            newsList.setStatus(Constants.STATUS_OK);
+            newsList.setArticle(articleList);
+            cursor.close();
+        } catch (Exception e) {
+            newsList.setStatus(Constants.STATUS_FAILED);
+        }
+        return newsList;
+    }
+
+    public boolean saveNewsItem(Article saveArticle) {
+        return newsDatabaseHelper.insertNews(saveArticle);
+    }
+
+    public int deleteNewsArticle(Article deleteArticle) {
+        return newsDatabaseHelper.deleteNewsArticle(deleteArticle);
     }
 
 }
