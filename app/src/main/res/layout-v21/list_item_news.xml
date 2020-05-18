@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="11dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginRight="11dp"
+        android:layout_marginBottom="7dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="@dimen/cardview_default_elevation">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/shadow_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_alignBottom="@id/img"
+                android:src="@drawable/background_shadow" />
+
+            <ProgressBar
+                android:id="@+id/prograss_load_photo"
+                style="@android:style/Widget.Material.ProgressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="70dp" />
+
+
+            <FrameLayout
+                android:id="@+id/layoutDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/img"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="-50dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/white_round_card"
+                android:padding="5dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/ic_date" />
+
+                <TextView
+                    android:id="@+id/publishedAt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="27dp"
+                    android:layout_marginLeft="27dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="01 January 1990"
+                    android:textColor="#606060" />
+
+
+            </FrameLayout>
+
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/img"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="16dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Title"
+                android:textColor="@color/colorTextTitle"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="16dp"
+                android:text="Desc" />
+
+            <TextView
+                android:id="@+id/source"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_below="@id/desc"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:drawablePadding="10dp"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-light"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="Source"
+                android:textColor="@color/colorTextTitle"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/author"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_below="@id/desc"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_toRightOf="@id/source"
+                android:drawablePadding="10dp"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-light"
+                android:gravity="bottom"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="Author"
+                android:textColor="@color/colorTextSubtitle" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_save"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/desc"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:backgroundTint="@android:color/white"
+                app:cornerRadius="0dp"
+                app:icon="@drawable/ic_love_grey"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconTint="@null"
+                app:rippleColor="@color/colorAccent" />
+
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</FrameLayout>
