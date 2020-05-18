@@ -33,6 +33,16 @@ public class Article {
     @Expose
     private String publishedAt;
 
+    private Boolean articleSaved = false;
+
+    public Boolean getArticleSaved() {
+        return articleSaved;
+    }
+
+    public void setArticleSaved(Boolean articleSaved) {
+        this.articleSaved = articleSaved;
+    }
+
     public Source getSource() {
         return source;
     }
