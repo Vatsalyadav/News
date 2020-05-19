@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vatsalyadav.apps.news.R;
@@ -42,12 +43,13 @@ public class NewsActivity extends DaggerAppCompatActivity implements NewsListAda
     private List<Article> articles = new ArrayList<>();
     private NewsListAdapter adapter;
     private NewsDetailsActivity newsDetailsActivity;
-
+    private TextView newsError;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
         progressBar = findViewById(R.id.progress_bar);
+        newsError = findViewById(R.id.news_error);
         viewModel = new ViewModelProvider(this, providerFactory).get(NewsViewModel.class);
         newsDetailsActivity = new NewsDetailsActivity();
         getNewsList();
@@ -70,18 +72,22 @@ public class NewsActivity extends DaggerAppCompatActivity implements NewsListAda
                         switch (newsNewsResource.status) {
                             case SUCCESS:
                                 showProgressBar(false);
+                                newsError.setVisibility(View.GONE);
                                 if (newsNewsResource.data != null && newsNewsResource.data.getStatus().equals(Constants.STATUS_OK)) {
                                     if (!articles.isEmpty()) {
                                         articles.clear();
                                     }
                                     articles = newsNewsResource.data.getArticle();
-                                    adapter = new NewsListAdapter(articles, NewsActivity.this, NewsActivity.this);
-                                    recyclerView.setAdapter(adapter);
-                                    adapter.notifyDataSetChanged();
+                                    if (articles.size() != 0) {
+                                        adapter = new NewsListAdapter(articles, NewsActivity.this, NewsActivity.this);
+                                        recyclerView.setAdapter(adapter);
+                                        adapter.notifyDataSetChanged();
+                                    } else newsError.setVisibility(View.VISIBLE);
                                 }
                                 break;
                             case ERROR:
                                 showProgressBar(false);
+                                newsError.setVisibility(View.VISIBLE);
                                 Toast.makeText(NewsActivity.this, "Failed to fetch", Toast.LENGTH_LONG).show();
                                 break;
                         }
@@ -123,6 +129,9 @@ public class NewsActivity extends DaggerAppCompatActivity implements NewsListAda
                 } else {
                     articles.remove(position);
                     adapter.notifyItemRemoved(position);
+                }
+                if (articles.size() == 0) {
+                    newsError.setVisibility(View.VISIBLE);
                 }
                 Toast.makeText(getBaseContext(), "News Successfully deleted from local storage", Toast.LENGTH_SHORT).show();
             } else {
