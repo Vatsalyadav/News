@@ -3,11 +3,13 @@ package com.vatsalyadav.apps.news.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.vatsalyadav.apps.news.R;
 
@@ -81,11 +83,29 @@ public class NewsDetailsActivity extends DaggerAppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+
+        if (item.getItemId() == R.id.share) {
+            try {
+                Intent intentShare = new Intent(Intent.ACTION_SEND);
+                intentShare.setType("text/plan");
+                String body = selectedNewsTitle + "\n" + newsUrl + "\n" + "Share from the News App" + "\n";
+                intentShare.putExtra(Intent.EXTRA_TEXT, body);
+                startActivity(Intent.createChooser(intentShare, "Share with :"));
+
+            } catch (Exception e) {
+                Toast.makeText(this, "Unable to share, please try again", Toast.LENGTH_SHORT).show();
+            }
+        } else if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_news_details, menu);
+        return true;
     }
 
 }
