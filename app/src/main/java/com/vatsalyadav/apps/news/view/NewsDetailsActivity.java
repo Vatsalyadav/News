@@ -40,7 +40,7 @@ public class NewsDetailsActivity extends DaggerAppCompatActivity {
     }
 
     // Create intent for NewsDetailsActivity with data to initiate it
-    public Intent launchNewsDetails(Context context, String articleTitle, String articleUrl) {
+    public static Intent newIntent(Context context, String articleTitle, String articleUrl) {
         Intent intent = new Intent(context, NewsDetailsActivity.class);
         intent.putExtra(EXTRA_SELECTED_NEWS_PUBLISHER, articleTitle);
         intent.putExtra(EXTRA_NEWS_URL, articleUrl);

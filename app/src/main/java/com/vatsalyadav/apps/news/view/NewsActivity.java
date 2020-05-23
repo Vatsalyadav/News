@@ -42,7 +42,6 @@ public class NewsActivity extends DaggerAppCompatActivity implements NewsListAda
     private RecyclerView recyclerView;
     private List<Article> articles = new ArrayList<>();
     private NewsListAdapter adapter;
-    private NewsDetailsActivity newsDetailsActivity;
     private TextView newsError;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +50,6 @@ public class NewsActivity extends DaggerAppCompatActivity implements NewsListAda
         progressBar = findViewById(R.id.progress_bar);
         newsError = findViewById(R.id.news_error);
         viewModel = new ViewModelProvider(this, providerFactory).get(NewsViewModel.class);
-        newsDetailsActivity = new NewsDetailsActivity();
         getNewsList();
         setupRecyclerView();
     }
@@ -72,8 +70,8 @@ public class NewsActivity extends DaggerAppCompatActivity implements NewsListAda
                         switch (newsNewsResource.status) {
                             case SUCCESS:
                                 showProgressBar(false);
-                                newsError.setVisibility(View.GONE);
                                 if (newsNewsResource.data != null && newsNewsResource.data.getStatus().equals(Constants.STATUS_OK)) {
+                                    newsError.setVisibility(View.GONE);
                                     if (!articles.isEmpty()) {
                                         articles.clear();
                                     }
@@ -83,6 +81,9 @@ public class NewsActivity extends DaggerAppCompatActivity implements NewsListAda
                                         recyclerView.setAdapter(adapter);
                                         adapter.notifyDataSetChanged();
                                     } else newsError.setVisibility(View.VISIBLE);
+                                } else {
+                                    newsError.setVisibility(View.VISIBLE);
+                                    Toast.makeText(NewsActivity.this, "Failed to fetch", Toast.LENGTH_LONG).show();
                                 }
                                 break;
                             case ERROR:
@@ -101,7 +102,7 @@ public class NewsActivity extends DaggerAppCompatActivity implements NewsListAda
 
     @Override
     public void onNewsClick(int position) {
-        Intent newsDetailsIntent = newsDetailsActivity.launchNewsDetails(this, articles.get(position).getSource().getName(), articles.get(position).getUrl());
+        Intent newsDetailsIntent = NewsDetailsActivity.newIntent(this, articles.get(position).getSource().getName(), articles.get(position).getUrl());
         startActivity(newsDetailsIntent);
     }
 
