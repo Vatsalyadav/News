@@ -1,7 +1,5 @@
 package com.vatsalyadav.apps.news.repository;
 
-import android.database.Cursor;
-
 import com.google.gson.Gson;
 import com.vatsalyadav.apps.news.model.Article;
 import com.vatsalyadav.apps.news.model.News;
@@ -14,8 +12,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -24,7 +20,6 @@ import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.schedulers.Schedulers;
 
 public class NewsRepository {
-    private News newsList;
     private NewsDatabaseHelper newsDatabaseHelper;
 
     public void setNewsDatabaseHelper(NewsDatabaseHelper newsDatabaseHelper) {
@@ -32,7 +27,6 @@ public class NewsRepository {
     }
 
     public Flowable<News> getNewsList(final boolean networkConnection) {
-        newsList = new News();
         return Flowable.create(new FlowableOnSubscribe<News>() {
             @Override
             public void subscribe(FlowableEmitter<News> emitter) throws Exception {
@@ -44,6 +38,7 @@ public class NewsRepository {
     }
 
     private News getNewsFromUrl() {
+        News newsList = new News();
         URL url;
         String responseString;
         HttpURLConnection urlConnection = null;
@@ -68,15 +63,10 @@ public class NewsRepository {
     }
 
     private News getNewsFromLocalStorage() {
-        List<Article> articleList = new ArrayList<>();
+        News newsList = new News();
         try {
-            Cursor cursor = newsDatabaseHelper.getData();
-            while (cursor.moveToNext()) {
-                articleList.add(new Gson().fromJson(cursor.getString(3), Article.class));
-            }
+            newsList.setArticle(newsDatabaseHelper.getData());
             newsList.setStatus(Constants.STATUS_OK);
-            newsList.setArticle(articleList);
-            cursor.close();
         } catch (Exception e) {
             newsList.setStatus(Constants.STATUS_FAILED);
         }

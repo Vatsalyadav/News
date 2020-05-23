@@ -9,6 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.google.gson.Gson;
 import com.vatsalyadav.apps.news.model.Article;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.annotation.Nullable;
 
 public class NewsDatabaseHelper extends SQLiteOpenHelper {
@@ -57,9 +60,15 @@ public class NewsDatabaseHelper extends SQLiteOpenHelper {
         return newRowId != -1;
     }
 
-    public Cursor getData() {
+    public List<Article> getData() {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.rawQuery(SQL_FETCH_ENTRIES, null);
+        List<Article> articleList = new ArrayList<>();
+        Cursor cursor = db.rawQuery(SQL_FETCH_ENTRIES, null);
+        while (cursor.moveToNext()) {
+            articleList.add(new Gson().fromJson(cursor.getString(3), Article.class));
+        }
+        cursor.close();
+        return articleList;
     }
 
     public int deleteNewsArticle(Article article) {
