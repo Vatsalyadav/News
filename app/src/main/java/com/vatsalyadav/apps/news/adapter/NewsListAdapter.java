@@ -132,7 +132,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHo
             title.setText(article.getTitle());
             desc.setText(article.getDescription());
             source.setText(article.getSource().getName());
-            published_ad.setText(Utils.DateFormat(article.getPublishedAt()));
+            published_ad.setText(Utils.dateFormat(article.getPublishedAt()));
             author.setText(article.getAuthor());
             buttonSave.setIcon(article.getArticleSaved() ? itemView.getResources().getDrawable(R.drawable.ic_love_pink) : itemView.getResources().getDrawable(R.drawable.ic_love_grey));
         }

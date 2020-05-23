@@ -7,7 +7,7 @@ import java.util.Locale;
 
 public class Utils {
 
-    public static String DateFormat(String oldstringDate) {
+    public static String dateFormat(String oldstringDate) {
         String newDate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("E, d MMM yyyy", new Locale(getCountry()));
         try {
