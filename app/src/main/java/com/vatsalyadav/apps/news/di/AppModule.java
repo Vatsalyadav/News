@@ -16,8 +16,8 @@ public class AppModule {
 
     @Singleton
     @Provides
-    static NewsRepository provideNewsRepository() {
-        return new NewsRepository();
+    static NewsRepository provideNewsRepository(NewsDatabaseHelper newsDatabaseHelper) {
+        return new NewsRepository(newsDatabaseHelper);
     }
 
     @Singleton

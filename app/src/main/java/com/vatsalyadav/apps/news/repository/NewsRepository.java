@@ -22,7 +22,7 @@ import io.reactivex.schedulers.Schedulers;
 public class NewsRepository {
     private NewsDatabaseHelper newsDatabaseHelper;
 
-    public void setNewsDatabaseHelper(NewsDatabaseHelper newsDatabaseHelper) {
+    public NewsRepository(NewsDatabaseHelper newsDatabaseHelper) {
         this.newsDatabaseHelper = newsDatabaseHelper;
     }
 

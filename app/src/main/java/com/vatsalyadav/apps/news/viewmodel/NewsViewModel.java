@@ -14,7 +14,6 @@ import android.webkit.WebViewClient;
 import com.vatsalyadav.apps.news.model.Article;
 import com.vatsalyadav.apps.news.model.News;
 import com.vatsalyadav.apps.news.repository.NewsRepository;
-import com.vatsalyadav.apps.news.repository.localStorageNews.NewsDatabaseHelper;
 import com.vatsalyadav.apps.news.util.Constants;
 
 import java.util.List;
@@ -36,14 +35,25 @@ public class NewsViewModel extends ViewModel {
     private NewsRepository repository;
     private MutableLiveData<List<Article>> articleList = new MutableLiveData<>();
     private MutableLiveData<Boolean> saveNewsSuccess = new MutableLiveData<>();
+    private LiveData<NewsResource<News>> newsResourceLiveData;
 
     @Inject
-    public NewsViewModel(NewsRepository newsRepository, NewsDatabaseHelper newsDatabaseHelper) {
+    public NewsViewModel(NewsRepository newsRepository) {
         this.repository = newsRepository;
-        this.repository.setNewsDatabaseHelper(newsDatabaseHelper);
+    }
+
+    public void init() {
+        if (newsResourceLiveData != null) {
+            return;
+        }
+        newsResourceLiveData = fetchNewsList();
     }
 
     public LiveData<NewsResource<News>> getNewsList() {
+        return newsResourceLiveData;
+    }
+
+    private LiveData<NewsResource<News>> fetchNewsList() {
         return LiveDataReactiveStreams.fromPublisher(
                 repository.getNewsList(isNetworkConnected())
                         .onErrorReturn(new Function<Throwable, News>() {

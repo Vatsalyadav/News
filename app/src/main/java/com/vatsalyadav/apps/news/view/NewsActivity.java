@@ -49,9 +49,14 @@ public class NewsActivity extends DaggerAppCompatActivity implements NewsListAda
         setContentView(R.layout.activity_news);
         progressBar = findViewById(R.id.progress_bar);
         newsError = findViewById(R.id.news_error);
-        viewModel = new ViewModelProvider(this, providerFactory).get(NewsViewModel.class);
+        initViewModel();
         getNewsList();
         setupRecyclerView();
+    }
+
+    private void initViewModel() {
+        viewModel = new ViewModelProvider(this, providerFactory).get(NewsViewModel.class);
+        viewModel.init();
     }
 
     private void setupRecyclerView() {
