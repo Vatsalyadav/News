@@ -1,9 +1,14 @@
 package com.vatsalyadav.apps.news.di;
 
 import android.app.Application;
+import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.vatsalyadav.apps.news.repository.NewsRepository;
 import com.vatsalyadav.apps.news.repository.localStorageNews.NewsDatabaseHelper;
+import com.vatsalyadav.apps.news.util.NetworkUtil;
 
 import javax.inject.Singleton;
 
@@ -26,4 +31,24 @@ public class AppModule {
         return new NewsDatabaseHelper(application);
     }
 
+    @Singleton
+    @Provides
+    static NetworkUtil provideNetworkUtil(Application application) {
+        return new NetworkUtil(application);
+    }
+
+    @Singleton
+    @Provides
+    static WebView provideWebView(Application application) {
+        WebView webView = new WebView(application.getApplicationContext());
+        webView.getSettings().setLoadsImagesAutomatically(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setAppCachePath(application.getCacheDir().getAbsolutePath());
+        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setAppCacheEnabled(true);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        webView.setWebViewClient(new WebViewClient());
+        return webView;
+    }
 }
