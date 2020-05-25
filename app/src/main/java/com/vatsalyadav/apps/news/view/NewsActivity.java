@@ -11,8 +11,8 @@ import com.vatsalyadav.apps.news.R;
 import com.vatsalyadav.apps.news.adapter.NewsListAdapter;
 import com.vatsalyadav.apps.news.model.Article;
 import com.vatsalyadav.apps.news.model.News;
-import com.vatsalyadav.apps.news.repository.localStorageNews.NewsDatabaseHelper;
 import com.vatsalyadav.apps.news.util.Constants;
+import com.vatsalyadav.apps.news.util.NetworkUtil;
 import com.vatsalyadav.apps.news.viewmodel.NewsResource;
 import com.vatsalyadav.apps.news.viewmodel.NewsViewModel;
 import com.vatsalyadav.apps.news.viewmodel.ViewModelProviderFactory;
@@ -37,12 +37,13 @@ public class NewsActivity extends DaggerAppCompatActivity implements NewsListAda
     private ProgressBar progressBar;
 
     @Inject
-    NewsDatabaseHelper newsDatabaseHelper;
+    NetworkUtil networkUtil;
 
     private RecyclerView recyclerView;
     private List<Article> articles = new ArrayList<>();
     private NewsListAdapter adapter;
     private TextView newsError;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,7 +130,7 @@ public class NewsActivity extends DaggerAppCompatActivity implements NewsListAda
             adapter.notifyItemChanged(position);
         } else {
             if (viewModel.deleteNewsArticle(articles.get(position))) {
-                if (viewModel.isNetworkConnected()) {
+                if (networkUtil.isNetworkConnected()) {
                     articles.get(position).setArticleSaved(false);
                     adapter.notifyItemChanged(position);
                 } else {
