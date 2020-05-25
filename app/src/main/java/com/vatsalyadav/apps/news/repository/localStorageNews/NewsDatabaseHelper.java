@@ -30,8 +30,11 @@ public class NewsDatabaseHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_TABLE =
             "DROP TABLE IF EXISTS " + NewsReaderContract.NewsEntry.TABLE_NAME;
 
-    public NewsDatabaseHelper(@Nullable Context context) {
+    private Gson gson;
+
+    public NewsDatabaseHelper(@Nullable Context context, Gson gson) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.gson = gson;
     }
 
     @Override
@@ -49,13 +52,12 @@ public class NewsDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        Gson gson = new Gson();
         newsArticle.setArticleSaved(true);
         values.put(NewsReaderContract.NewsEntry.COLUMN_NAME_ARTICLE_TITLE, newsArticle.getTitle());
         values.put(NewsReaderContract.NewsEntry.COLUMN_NAME_ARTICLE_URL, newsArticle.getUrl());
         values.put(NewsReaderContract.NewsEntry.COLUMN_NAME_ARTICLE_JSON, gson.toJson(newsArticle));
         // Insert the new row, returning the primary key value of the new row
-        long newRowId = db.insert(NewsReaderContract.NewsEntry.TABLE_NAME, null, values);
+        long newRowId = db.insertWithOnConflict(NewsReaderContract.NewsEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         db.close();
         return newRowId != -1;
     }
@@ -65,7 +67,7 @@ public class NewsDatabaseHelper extends SQLiteOpenHelper {
         List<Article> articleList = new ArrayList<>();
         Cursor cursor = db.rawQuery(SQL_FETCH_ENTRIES, null);
         while (cursor.moveToNext()) {
-            articleList.add(new Gson().fromJson(cursor.getString(3), Article.class));
+            articleList.add(gson.fromJson(cursor.getString(3), Article.class));
         }
         cursor.close();
         return articleList;

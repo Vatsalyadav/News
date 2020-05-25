@@ -114,15 +114,15 @@ public class NewsActivity extends DaggerAppCompatActivity implements NewsListAda
 
     @Override
     public void onSaveClick(int position) {
-        boolean savedState = articles.get(position).getArticleSaved();
+        boolean savedState = viewModel.getArticleSavedState(position);
         if (!savedState) {
             viewModel.saveNewsItem(position).observe(this, new Observer<Boolean>() {
                 @Override
                 public void onChanged(Boolean isSuccessfullySaved) {
                     if (isSuccessfullySaved) {
-                        Toast.makeText(getBaseContext(), "News Saved", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getBaseContext(), "News Article Saved", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getBaseContext(), "Failed to Save News", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getBaseContext(), "Failed to Save News Article", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -140,9 +140,8 @@ public class NewsActivity extends DaggerAppCompatActivity implements NewsListAda
                 if (articles.size() == 0) {
                     newsError.setVisibility(View.VISIBLE);
                 }
-                Toast.makeText(getBaseContext(), "News Successfully deleted from local storage", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getBaseContext(), "Failed to Delete News", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "News Article Successfully deleted from local storage", Toast.LENGTH_SHORT).show();
             }
         }
     }

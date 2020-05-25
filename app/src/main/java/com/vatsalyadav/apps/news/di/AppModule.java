@@ -6,6 +6,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.google.gson.Gson;
 import com.vatsalyadav.apps.news.repository.NewsRepository;
 import com.vatsalyadav.apps.news.repository.localStorageNews.NewsDatabaseHelper;
 import com.vatsalyadav.apps.news.util.NetworkUtil;
@@ -27,8 +28,8 @@ public class AppModule {
 
     @Singleton
     @Provides
-    static NewsDatabaseHelper provideNewsDatabaseHelper(Application application) {
-        return new NewsDatabaseHelper(application);
+    static NewsDatabaseHelper provideNewsDatabaseHelper(Application application, Gson gson) {
+        return new NewsDatabaseHelper(application, gson);
     }
 
     @Singleton
@@ -50,5 +51,11 @@ public class AppModule {
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         webView.setWebViewClient(new WebViewClient());
         return webView;
+    }
+
+    @Singleton
+    @Provides
+    static Gson provideGson() {
+        return new Gson();
     }
 }

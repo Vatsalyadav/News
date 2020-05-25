@@ -72,6 +72,10 @@ public class NewsViewModel extends ViewModel {
         );
     }
 
+    public boolean getArticleSavedState(int position) {
+        return articleList.getValue().get(position).getArticleSaved();
+    }
+
     public LiveData<Boolean> saveNewsItem(int position) {
         boolean isSuccessfullySaved = repository.saveNewsItem(articleList.getValue().get(position));
         saveNewsSuccess.postValue(isSuccessfullySaved);
