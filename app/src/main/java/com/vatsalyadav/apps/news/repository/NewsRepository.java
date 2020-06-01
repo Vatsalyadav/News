@@ -3,7 +3,6 @@ package com.vatsalyadav.apps.news.repository;
 import com.google.gson.Gson;
 import com.vatsalyadav.apps.news.model.Article;
 import com.vatsalyadav.apps.news.model.News;
-import com.vatsalyadav.apps.news.repository.localStorageNews.NewsDatabaseHelper;
 import com.vatsalyadav.apps.news.util.Constants;
 
 import java.io.BufferedInputStream;
@@ -20,11 +19,11 @@ import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.schedulers.Schedulers;
 
 public class NewsRepository {
-    private NewsDatabaseHelper newsDatabaseHelper;
+//    private NewsDatabaseHelper newsDatabaseHelper;
 
-    public NewsRepository(NewsDatabaseHelper newsDatabaseHelper) {
-        this.newsDatabaseHelper = newsDatabaseHelper;
-    }
+//    public NewsRepository() {
+//        this.newsDatabaseHelper = newsDatabaseHelper;
+//    }
 
     public Flowable<News> getNewsList(final boolean networkConnection) {
         return Flowable.create(new FlowableOnSubscribe<News>() {
@@ -65,7 +64,7 @@ public class NewsRepository {
     private News getNewsFromLocalStorage() {
         News newsList = new News();
         try {
-            newsList.setArticle(newsDatabaseHelper.getData());
+//            newsList.setArticle(newsDatabaseHelper.getData());
             newsList.setStatus(Constants.STATUS_OK);
         } catch (Exception e) {
             newsList.setStatus(Constants.STATUS_FAILED);
@@ -74,11 +73,13 @@ public class NewsRepository {
     }
 
     public boolean saveNewsItem(Article saveArticle) {
-        return newsDatabaseHelper.insertNews(saveArticle);
+//        return newsDatabaseHelper.insertNews(saveArticle);
+        return true; // TODO: Temporary return, replace with ROOM saveNewsItem implementation
     }
 
     public int deleteNewsArticle(Article deleteArticle) {
-        return newsDatabaseHelper.deleteNewsArticle(deleteArticle);
+//        return newsDatabaseHelper.deleteNewsArticle(deleteArticle);
+        return 1; // TODO: Temporary return, replace with ROOM deleteNewsArticle implementation
     }
 
 }

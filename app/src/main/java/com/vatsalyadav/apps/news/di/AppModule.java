@@ -7,8 +7,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.google.gson.Gson;
-import com.vatsalyadav.apps.news.repository.NewsRepository;
-import com.vatsalyadav.apps.news.repository.localStorageNews.NewsDatabaseHelper;
+import com.vatsalyadav.apps.news.repository.localStorageNewsDeprecated.NewsDatabaseHelper;
 import com.vatsalyadav.apps.news.util.NetworkUtil;
 
 import javax.inject.Singleton;
@@ -20,11 +19,11 @@ import dagger.Provides;
 public class AppModule {
     // App level module which will have Application level dependencies like Repository, Glide Instance
 
-    @Singleton
-    @Provides
-    static NewsRepository provideNewsRepository(NewsDatabaseHelper newsDatabaseHelper) {
-        return new NewsRepository(newsDatabaseHelper);
-    }
+//    @Singleton
+//    @Provides
+//    static NewsRepository provideNewsRepository(NewsDatabaseHelper newsDatabaseHelper) {
+//        return new NewsRepository(newsDatabaseHelper);
+//    }
 
     @Singleton
     @Provides

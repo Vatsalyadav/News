@@ -1,4 +1,4 @@
-package com.vatsalyadav.apps.news.repository.localStorageNews;
+package com.vatsalyadav.apps.news.repository.localStorageNewsDeprecated;
 
 import android.provider.BaseColumns;
 
