@@ -13,6 +13,13 @@ public class Source {
     @Expose
     private String name;
 
+    public Source(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Source() {
+    }
 
     public String getId() {
         return id;

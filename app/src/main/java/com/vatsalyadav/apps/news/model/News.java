@@ -11,9 +11,22 @@ public class News {
     @Expose
     private String status;
 
+    @SerializedName("totalResults")
+    @Expose
+    private int totalResults;
+
     @SerializedName("articles")
     @Expose
     private List<Article> article;
+
+    @Override
+    public String toString() {
+        return "NewsResponse{" +
+                "status=" + status +
+                ", totalResults=" + totalResults +
+                ", articles=" + article +
+                '}';
+    }
 
     public String getStatus() {
         return status;
