@@ -8,22 +8,19 @@ import android.webkit.WebViewClient;
 
 import com.google.gson.Gson;
 import com.vatsalyadav.apps.news.repository.localStorageNewsDeprecated.NewsDatabaseHelper;
+import com.vatsalyadav.apps.news.util.Constants;
 import com.vatsalyadav.apps.news.util.NetworkUtil;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class AppModule {
     // App level module which will have Application level dependencies like Repository, Glide Instance
-
-//    @Singleton
-//    @Provides
-//    static NewsRepository provideNewsRepository(NewsDatabaseHelper newsDatabaseHelper) {
-//        return new NewsRepository(newsDatabaseHelper);
-//    }
 
     @Singleton
     @Provides
@@ -56,5 +53,16 @@ public class AppModule {
     @Provides
     static Gson provideGson() {
         return new Gson();
+    }
+
+    @Singleton
+    @Provides
+    static Retrofit provideRetrofit() {
+        Retrofit.Builder retrofitBuilder =
+                new Retrofit.Builder()
+                        .baseUrl(Constants.BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create());
+
+        return retrofitBuilder.build();
     }
 }

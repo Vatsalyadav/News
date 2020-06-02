@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.vatsalyadav.apps.news"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -21,6 +21,10 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -71,8 +75,14 @@ dependencies {
     def material_version = "1.1.0"
     implementation "com.google.android.material:material:$material_version"
 
-    // Gson 
+    // Gson TODO: Remove after migration to retrofit
     def gson_version = "2.8.6"
     implementation "com.google.code.gson:gson:$gson_version"
 
+    // Retrofit
+    def retrofit_version = "2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+
+    // Retrofit gson converter
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 }
