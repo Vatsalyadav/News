@@ -13,11 +13,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 public class NewsViewModel extends ViewModel {
 
@@ -40,36 +38,22 @@ public class NewsViewModel extends ViewModel {
         if (newsResourceLiveData != null) {
             return;
         }
-        newsResourceLiveData = fetchNewsList();
+        fetchNewsFromApi();
+    }
+
+    private void fetchNewsFromApi() {
+        repository.getNewsApi();
+        newsResourceLiveData = Transformations.map(repository.getNews(), news -> {
+            if (news.getStatus().equals(Constants.STATUS_FAILED)) {
+                return NewsResource.error("Could not fetch", null);
+            }
+            articleList.postValue(news.getArticle());
+            return NewsResource.success(news);
+        });
     }
 
     public LiveData<NewsResource<News>> getNewsList() {
         return newsResourceLiveData;
-    }
-
-    private LiveData<NewsResource<News>> fetchNewsList() {
-        return LiveDataReactiveStreams.fromPublisher(
-                repository.getNewsList(networkUtil.isNetworkConnected())
-                        .onErrorReturn(new Function<Throwable, News>() {
-                            @Override
-                            public News apply(Throwable throwable) throws Exception {
-                                News errorNews = new News();
-                                errorNews.setStatus(Constants.STATUS_FAILED);
-                                return errorNews;
-                            }
-                        })
-                        .map(new Function<News, NewsResource<News>>() {
-                            @Override
-                            public NewsResource<News> apply(News news) throws Exception {
-                                if (news.getStatus().equals(Constants.STATUS_FAILED)) {
-                                    return NewsResource.error("Could not authenticate", null);
-                                }
-                                articleList.postValue(news.getArticle());
-                                return NewsResource.success(news);
-                            }
-                        })
-                        .subscribeOn(Schedulers.io())
-        );
     }
 
     public boolean getArticleSavedState(int position) {
