@@ -3,7 +3,7 @@ News is an Android Application to fetch News from an API and save in local stora
 
 <br>News App can:
 
-1. Fetch News from API using HttpURLConnection
+1. Fetch News from API using Retrofit
 2. Save News Articles in Local SQLite Database Storage for reading them later
 3. Delete News Articles from Local SQLite Database Storage when no longer required
 4. Integrated web browser to view full News article
@@ -22,6 +22,7 @@ News is an Android Application to fetch News from an API and save in local stora
 * Glide
 * Lifecycle
 * Material 
+* Retrofit
 * RxJava
 * SQLite Database
 * Dagger2
@@ -86,6 +87,9 @@ RecyclerView is an efficient version of ListView which acts as a container for r
 
 #### Dagger2
 Dagger is a compile-time framework for dependency injection. It uses no reflection or runtime bytecode generation, does all its analysis at compile-time, and generates plain Java source code.
+
+#### Retrofit
+Retrofit is a type safe REST Client which makes it relatively easy to retrieve and upload JSON (or other structured data) via a REST based webservice. Using Retrofit, you can configure which converter is used for the data serialization.
 
 Developed By
 ------------
